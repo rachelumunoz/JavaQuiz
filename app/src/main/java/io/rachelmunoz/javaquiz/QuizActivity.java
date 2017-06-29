@@ -2,14 +2,15 @@ package io.rachelmunoz.javaquiz;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 public class QuizActivity extends AppCompatActivity {
 
     private TextView mQuestionTextView;
+    private Button mPreviousButton;
+    private Button mNextButton;
 
     private Question[] mQuestionBank = new Question[] {
         new Question(R.string.question_one, true),
@@ -26,10 +27,21 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        updateQuestion();
+
+        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+
+                updateQuestion();
+            }
+        });
+    }
+
+    private void updateQuestion(){
         int questionTextId = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(questionTextId);
-
-
-
     }
 }

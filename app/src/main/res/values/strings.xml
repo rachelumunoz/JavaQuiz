@@ -3,6 +3,10 @@
 
     <string name="true_button">True</string>
     <string name="false_button">False</string>
+    <string name="next_button">Next</string>
+    <string name="previous_button">Prev</string>
 
-    <string name="question_one">Java is a compliled language.</string>
+    <string name="question_one">Java is a compiled language.</string>
+    <string name="question_two">Java uses prototypal inheritance.</string>
+    <string name="question_three">A class can inherit from more than one class.</string>
 </resources>
