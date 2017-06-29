@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity {
 
     private TextView mQuestionTextView;
     private Button mPreviousButton;
     private Button mNextButton;
+    private Button mTrueButton;
+    private Button mFalseButton;
 
     private Question[] mQuestionBank = new Question[] {
         new Question(R.string.question_one, true),
@@ -38,10 +41,40 @@ public class QuizActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+
+        mTrueButton = (Button) findViewById(R.id.true_button);
+        mTrueButton.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                checkAnswer(true);
+            }
+        });
+
+        mFalseButton = (Button) findViewById(R.id.false_button);
+        mFalseButton.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                checkAnswer(false);
+            }
+        });
     }
 
     private void updateQuestion(){
         int questionTextId = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(questionTextId);
     }
+
+    private void checkAnswer(boolean answerGuessed){
+        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+        int messageResId;
+
+        if (answerGuessed == answerIsTrue){
+            messageResId = R.string.correct_toast;
+        } else {
+            messageResId = R.string.incorrect_toast;
+        }
+
+        Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
+    }
+
 }

@@ -9,4 +9,7 @@
     <string name="question_one">Java is a compiled language.</string>
     <string name="question_two">Java uses prototypal inheritance.</string>
     <string name="question_three">A class can inherit from more than one class.</string>
+
+    <string name="correct_toast">Correct!</string>
+    <string name="incorrect_toast">Incorrect!</string>
 </resources>
