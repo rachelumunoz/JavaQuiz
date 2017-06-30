@@ -1,17 +1,20 @@
 package io.rachelmunoz.javaquiz;
 
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity {
+    private final String CURRENT_INDEX = "io.rachelmunoz.android.javaquiz.current_index";
 
     private TextView mQuestionTextView;
     private Button mPreviousButton;
-    private Button mNextButton;
+    private ImageButton mNextButton;
     private Button mTrueButton;
     private Button mFalseButton;
 
@@ -29,15 +32,18 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        if (savedInstanceState != null){
+            mCurrentIndex = savedInstanceState.getInt(CURRENT_INDEX, 0);
+        }
+
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         updateQuestion();
 
-        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton = (ImageButton)findViewById(R.id.next_button);
         mNextButton.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-
                 updateQuestion();
             }
         });
@@ -77,4 +83,9 @@ public class QuizActivity extends AppCompatActivity {
         Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_INDEX, mCurrentIndex);
+    }
 }
