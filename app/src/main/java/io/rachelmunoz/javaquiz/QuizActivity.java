@@ -13,7 +13,7 @@ public class QuizActivity extends AppCompatActivity {
     private final String CURRENT_INDEX = "io.rachelmunoz.android.javaquiz.current_index";
 
     private TextView mQuestionTextView;
-    private Button mPreviousButton;
+    private ImageButton mPreviousButton;
     private ImageButton mNextButton;
     private Button mTrueButton;
     private Button mFalseButton;
@@ -61,6 +61,20 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 checkAnswer(false);
+            }
+        });
+
+        mPreviousButton = (ImageButton) findViewById(R.id.previous_button);
+        mPreviousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mCurrentIndex == 0){
+                    Toast.makeText(QuizActivity.this, "Hit Next", Toast.LENGTH_SHORT).show();
+                } else {
+                    mCurrentIndex = mCurrentIndex - 1;
+                    updateQuestion();
+                }
             }
         });
     }
