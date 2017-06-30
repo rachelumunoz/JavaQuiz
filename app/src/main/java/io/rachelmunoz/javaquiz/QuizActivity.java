@@ -1,5 +1,7 @@
 package io.rachelmunoz.javaquiz;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,12 +10,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_CHEAT = 0;
 
     private TextView mQuestionTextView;
     private Button mPreviousButton;
     private Button mNextButton;
     private Button mTrueButton;
     private Button mFalseButton;
+    private Button mCheatButton;
+    private boolean mUserCheated;
 
     private Question[] mQuestionBank = new Question[] {
         new Question(R.string.question_one, true),
@@ -36,6 +41,8 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                mUserCheated = false;
+
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
 
                 updateQuestion();
@@ -57,6 +64,18 @@ public class QuizActivity extends AppCompatActivity {
                 checkAnswer(false);
             }
         });
+
+        mCheatButton = (Button) findViewById(R.id.cheat_button);
+        mCheatButton.setOnClickListener( new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                // intent - putExtra - question's answer
+                boolean questionAnswer = mQuestionBank[mCurrentIndex].isAnswerTrue();
+                Intent intent = CheatActivity.newIntent(QuizActivity.this, questionAnswer);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
+            }
+        });
     }
 
     private void updateQuestion(){
@@ -68,13 +87,36 @@ public class QuizActivity extends AppCompatActivity {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
         int messageResId;
 
-        if (answerGuessed == answerIsTrue){
-            messageResId = R.string.correct_toast;
+        if (mUserCheated){
+            messageResId = R.string.judgement_toast;
         } else {
-            messageResId = R.string.incorrect_toast;
+            if (answerGuessed == answerIsTrue){
+                messageResId = R.string.correct_toast;
+            } else {
+                messageResId = R.string.incorrect_toast;
+            }
         }
+
 
         Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != Activity.RESULT_OK){
+            return;
+        }
+
+        if (requestCode != REQUEST_CODE_CHEAT){
+            return;
+        }
+
+        if ( data != null){
+            mUserCheated = CheatActivity.didUserCheat(data);
+        }
+
+
+    }
 }
